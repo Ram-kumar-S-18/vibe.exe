@@ -2,21 +2,30 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ride Allocation Optimizer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="container">
-    <header>
-      <h1>Ride Allocation Optimizer</h1>
-      <p>Real‑time assignment of drivers to riders</p>
+    <header class="header">
+      <h1>🚗 Ride Allocation Optimizer</h1>
+      <p class="subtitle">
+        Real‑time assignment of <strong>drivers</strong> to <strong>riders</strong>
+      </p>
     </header>
 
-    <button id="allocateBtn">Run Allocation</button>
+    <section class="actions">
+      <button id="allocateBtn">▶ Run Allocation</button>
+    </section>
 
-    <section>
-      <h2>Assignment Results</h2>
-      <pre id="out"></pre>
+    <!-- Notification -->
+    <div id="notification" class="notification hidden"></div>
+
+    <!-- Results -->
+    <section class="results">
+      <h2>📊 Assignment Results</h2>
+      <div id="cards"></div>
     </section>
   </main>
 

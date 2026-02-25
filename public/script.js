@@ -1,23 +1,41 @@
 const btn = document.getElementById("allocateBtn");
-const out = document.getElementById("out");
+const cards = document.getElementById("cards");
+const notification = document.getElementById("notification");
 
 btn.onclick = () => {
+  if (btn.disabled) return;
+
   btn.disabled = true;
-  out.textContent = "Allocating drivers...\n";
+  cards.innerHTML = "";
+  notification.className = "notification info";
+  notification.textContent = "Allocating drivers to riders...";
+  notification.classList.remove("hidden");
 
   fetch("/allocate", { method: "POST" })
     .then((res) => res.json())
     .then((data) => {
-      let text = `Available Drivers After Allocation: ${data.remaining}\n\n`;
+      notification.className = "notification success";
+      notification.textContent = `✅ Allocation complete. Available drivers left: ${data.remaining}`;
 
       data.allocations.forEach((r) => {
-        text += `Rider: ${r.name}\n`;
-        text += `Pickup: ${r.pickup_zone}\n`;
-        text += `Drop: ${r.drop_zone}\n`;
-        text += `Driver Assigned: ${r.status === "assigned" ? "Yes" : "No"}\n\n`;
-      });
+        const card = document.createElement("div");
+        card.className = `card ${r.status === "assigned" ? "assigned" : "waiting"}`;
 
-      out.textContent = text;
+        card.innerHTML = `
+          <h3>👤 ${r.name}</h3>
+          <p>📍 Pickup: ${r.pickup_zone}</p>
+          <p>🏁 Drop: ${r.drop_zone}</p>
+          <p>🚗 Driver: ${r.status === "assigned" ? "Assigned" : "Waiting"}</p>
+        `;
+
+        cards.appendChild(card);
+      });
     })
-    .finally(() => (btn.disabled = false));
+    .catch(() => {
+      notification.className = "notification info";
+      notification.textContent = "⚠️ Allocation failed safely.";
+    })
+    .finally(() => {
+      btn.disabled = false;
+    });
 };
