@@ -1,35 +1,23 @@
-const output = document.getElementById("out");
-const button = document.getElementById("allocateBtn");
+const btn = document.getElementById("allocateBtn");
+const out = document.getElementById("out");
 
-button.addEventListener("click", () => {
-  if (button.disabled) return;
-
-  button.disabled = true;
-  output.textContent = "Running allocation...";
+btn.onclick = () => {
+  btn.disabled = true;
+  out.textContent = "Allocating drivers...\n";
 
   fetch("/allocate", { method: "POST" })
     .then((res) => res.json())
     .then((data) => {
-      if (!data || !data.allocations) {
-        output.textContent = "Unexpected response from server.";
-        return;
-      }
+      let text = `Available Drivers After Allocation: ${data.remaining}\n\n`;
 
-      let text = `Remaining Resources: ${data.remaining}\n\n`;
-
-      data.allocations.forEach((a) => {
-        text += `Project: ${a.name}\n`;
-        text += `Requested: ${a.demand}\n`;
-        text += `Allocated: ${a.allocated}\n`;
-        text += `Status: ${a.status}\n\n`;
+      data.allocations.forEach((r) => {
+        text += `Rider: ${r.name}\n`;
+        text += `Pickup: ${r.pickup_zone}\n`;
+        text += `Drop: ${r.drop_zone}\n`;
+        text += `Driver Assigned: ${r.status === "assigned" ? "Yes" : "No"}\n\n`;
       });
 
-      output.textContent = text || "No allocations available.";
+      out.textContent = text;
     })
-    .catch(() => {
-      output.textContent = "Allocation failed safely.";
-    })
-    .finally(() => {
-      button.disabled = false;
-    });
-});
+    .finally(() => (btn.disabled = false));
+};

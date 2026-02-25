@@ -9,25 +9,16 @@ function allocateResources(resources, tasks) {
   const allocations = [];
 
   for (const task of sortedTasks) {
-    const demand = Number(task.demand) || 0;
-
-    if (demand <= 0) {
-      allocations.push({ ...task, allocated: 0, status: "invalid" });
-      continue;
-    }
-
     if (remaining === 0) {
-      allocations.push({ ...task, allocated: 0, status: "unallocated" });
+      allocations.push({ ...task, allocated: 0, status: "waiting" });
       continue;
     }
 
-    const allocated = Math.min(demand, remaining);
-    remaining -= allocated;
-
+    remaining -= 1;
     allocations.push({
       ...task,
-      allocated,
-      status: allocated === demand ? "allocated" : "partial",
+      allocated: 1,
+      status: "assigned",
     });
   }
 

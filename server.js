@@ -22,5 +22,5 @@ app.use("/allocate", allocateRoute);
 app.use("/release", releaseRoute);
 
 app.listen(PORT, () => {
-  console.log(`ResAl running at http://localhost:${PORT}`);
+  console.log(`Ride Allocation Service running at http://localhost:${PORT}`);
 });

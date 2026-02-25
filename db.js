@@ -16,26 +16,32 @@ db.serialize(() => {
       name TEXT NOT NULL,
       demand INTEGER NOT NULL,
       priority INTEGER NOT NULL,
+      pickup_zone TEXT,
+      drop_zone TEXT,
       status TEXT NOT NULL,
       allocated INTEGER NOT NULL
     )
   `);
 
-  db.get("SELECT COUNT(*) AS count FROM resources", (err, row) => {
+  // Seed drivers
+  db.get("SELECT COUNT(*) AS count FROM resources", (_, row) => {
     if (row.count === 0) {
-      db.run("INSERT INTO resources (id, total, available) VALUES (1, 10, 10)");
+      db.run("INSERT INTO resources (id, total, available) VALUES (1, 5, 5)");
     }
   });
 
-  db.get("SELECT COUNT(*) AS count FROM tasks", (err, row) => {
+  // Seed riders
+  db.get("SELECT COUNT(*) AS count FROM tasks", (_, row) => {
     if (row.count === 0) {
-      const stmt = db.prepare(
-        "INSERT INTO tasks (name, demand, priority, status, allocated) VALUES (?, ?, ?, 'pending', 0)",
-      );
+      const stmt = db.prepare(`
+        INSERT INTO tasks 
+        (name, demand, priority, pickup_zone, drop_zone, status, allocated)
+        VALUES (?, 1, ?, ?, ?, 'pending', 0)
+      `);
 
-      stmt.run("Payroll System", 4, 3);
-      stmt.run("Mobile App", 3, 2);
-      stmt.run("Analytics Platform", 5, 1);
+      stmt.run("Rider A", 3, "Downtown", "Airport");
+      stmt.run("Rider B", 2, "Mall", "University");
+      stmt.run("Rider C", 1, "Station", "Tech Park");
 
       stmt.finalize();
     }
