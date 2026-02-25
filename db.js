@@ -1,4 +1,3 @@
-// db.js
 const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("./resal.db");
 
@@ -14,6 +13,7 @@ db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS tasks (
       id INTEGER PRIMARY KEY,
+      name TEXT NOT NULL,
       demand INTEGER NOT NULL,
       priority INTEGER NOT NULL,
       status TEXT NOT NULL,
@@ -21,27 +21,25 @@ db.serialize(() => {
     )
   `);
 
-  // Ensure exactly one resource row exists
-  db.get("SELECT COUNT(*) as count FROM resources", (err, row) => {
+  db.get("SELECT COUNT(*) AS count FROM resources", (err, row) => {
     if (row.count === 0) {
       db.run("INSERT INTO resources (id, total, available) VALUES (1, 10, 10)");
+    }
+  });
+
+  db.get("SELECT COUNT(*) AS count FROM tasks", (err, row) => {
+    if (row.count === 0) {
+      const stmt = db.prepare(
+        "INSERT INTO tasks (name, demand, priority, status, allocated) VALUES (?, ?, ?, 'pending', 0)",
+      );
+
+      stmt.run("Payroll System", 4, 3);
+      stmt.run("Mobile App", 3, 2);
+      stmt.run("Analytics Platform", 5, 1);
+
+      stmt.finalize();
     }
   });
 });
 
 module.exports = db;
-// Seed tasks if empty (company prototype)
-db.get("SELECT COUNT(*) as count FROM tasks", (err, row) => {
-  if (row.count === 0) {
-    const stmt = db.prepare(
-      "INSERT INTO tasks (demand, priority, status, allocated) VALUES (?, ?, 'pending', 0)"
-    );
-
-    // Company projects
-    stmt.run(4, 3); // Payroll System
-    stmt.run(3, 2); // Mobile App
-    stmt.run(5, 1); // Analytics Platform
-
-    stmt.finalize();
-  }
-});

@@ -1,6 +1,13 @@
-// server.js
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err.message);
+});
+
+process.on("unhandledRejection", (err) => {
+  console.error("Unhandled Rejection:", err);
+});
+
 const express = require("express");
-const db = require("./db");
+require("./db");
 
 const allocateRoute = require("./routes/allocate.route");
 const releaseRoute = require("./routes/release.route");
@@ -15,5 +22,5 @@ app.use("/allocate", allocateRoute);
 app.use("/release", releaseRoute);
 
 app.listen(PORT, () => {
-  console.log(`ResAl running on http://localhost:${PORT}`);
+  console.log(`ResAl running at http://localhost:${PORT}`);
 });

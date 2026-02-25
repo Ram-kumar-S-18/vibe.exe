@@ -1,4 +1,3 @@
-// routes/release.route.js
 const express = require("express");
 const db = require("../db");
 
@@ -12,7 +11,7 @@ router.post("/:id", (req, res) => {
     [taskId],
     (err, task) => {
       if (!task) {
-        return res.status(400).json({ error: "Invalid task" });
+        return res.json({ message: "Invalid task" });
       }
 
       db.serialize(() => {
@@ -25,6 +24,7 @@ router.post("/:id", (req, res) => {
         db.run("UPDATE tasks SET status = 'completed' WHERE id = ?", [taskId]);
 
         db.run("COMMIT");
+
         res.json({ message: "Resources released" });
       });
     },

@@ -1,4 +1,3 @@
-// allocator/allocate.js
 function allocateResources(resources, tasks) {
   let remaining = Number(resources.total) || 0;
   if (remaining < 0) remaining = 0;
