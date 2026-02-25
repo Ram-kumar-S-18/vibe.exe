@@ -23,18 +23,16 @@ db.serialize(() => {
     )
   `);
 
-  // Seed drivers
   db.get("SELECT COUNT(*) AS count FROM resources", (_, row) => {
     if (row.count === 0) {
       db.run("INSERT INTO resources (id, total, available) VALUES (1, 5, 5)");
     }
   });
 
-  // Seed riders
   db.get("SELECT COUNT(*) AS count FROM tasks", (_, row) => {
     if (row.count === 0) {
       const stmt = db.prepare(`
-        INSERT INTO tasks 
+        INSERT INTO tasks
         (name, demand, priority, pickup_zone, drop_zone, status, allocated)
         VALUES (?, 1, ?, ?, ?, 'pending', 0)
       `);

@@ -9,6 +9,12 @@ router.post("/", (_, res) => {
     db.all("SELECT * FROM tasks WHERE status = 'pending'", (_, tasks) => {
       const result = allocateResources({ total: resource.available }, tasks);
 
+      const assignedCount = result.allocations.filter(
+        (r) => r.status === "assigned",
+      ).length;
+
+      const newAvailable = Math.max(resource.available - assignedCount, 0);
+
       db.serialize(() => {
         db.run("BEGIN");
 
@@ -21,11 +27,11 @@ router.post("/", (_, res) => {
         });
 
         db.run("UPDATE resources SET available = ? WHERE id = 1", [
-          result.remaining,
+          newAvailable,
         ]);
 
         db.run("COMMIT");
-        res.json(result);
+        res.json({ remaining: newAvailable, allocations: result.allocations });
       });
     });
   });

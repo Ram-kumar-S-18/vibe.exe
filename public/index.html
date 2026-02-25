@@ -2,31 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ride Allocation Optimizer</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="container">
-    <header class="header">
-      <h1>🚗 Ride Allocation Optimizer</h1>
-      <p class="subtitle">
-        Real‑time assignment of <strong>drivers</strong> to <strong>riders</strong>
-      </p>
-    </header>
+    <h1>🚗 Ride Allocation Optimizer</h1>
+    <p>Real‑time assignment of drivers to riders</p>
 
-    <section class="actions">
-      <button id="allocateBtn">▶ Run Allocation</button>
-    </section>
+    <button id="allocateBtn">▶ Run Allocation</button>
 
-    <!-- Notification -->
     <div id="notification" class="notification hidden"></div>
 
-    <!-- Results -->
-    <section class="results">
-      <h2>📊 Assignment Results</h2>
-      <div id="cards"></div>
-    </section>
+    <h2>➕ Add New Ride</h2>
+    <div class="add-ride">
+      <input id="riderName" placeholder="Rider Name" />
+      <input id="pickup" placeholder="Pickup Zone" />
+      <input id="drop" placeholder="Drop Zone" />
+      <select id="priority">
+        <option value="3">High</option>
+        <option value="2">Medium</option>
+        <option value="1">Low</option>
+      </select>
+      <button id="addRideBtn">Add Ride</button>
+    </div>
+
+    <h2>📊 Assignment Results</h2>
+    <div id="cards"></div>
   </main>
 
   <script src="script.js"></script>
